@@ -1,0 +1,7 @@
+---
+# Register your services here.
+# Service files must be found at /services/service-name
+services:
+  connect_demo:
+    name: "connect_demo"
+    description: "A game of connect-4. This is a demo provided by the official tutorial of Python Websockets."

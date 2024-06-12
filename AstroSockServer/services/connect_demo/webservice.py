@@ -1,5 +1,5 @@
 import asyncio
-from connect4 import PLAYER1, PLAYER2, Connect4
+from services.connect_demo.connect4 import PLAYER1, PLAYER2, Connect4
 import websockets
 import itertools
 import json

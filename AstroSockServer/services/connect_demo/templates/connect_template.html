@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Connect Four</title>
+    <link rel="stylesheet" href="{{ url_for('/services/connect_demo/static', filename='connect4.css') }}" />
+  </head>
+  <body>
+    <div class="board"></div>
+    <script type="text/javascript">
+        const port = {{ port|tojson|safe }}
+    </script>
+    <script src="{{ url_for('/services/connect_demo/static', filename='main.js') }}" type="module"></script>
+
+  </body>
+</html>

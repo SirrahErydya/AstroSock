@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AstroSock</title>
+</head>
+<body>
+  <h1>Welcome to AstroSock!</h1>
+  <p>AstroSock offers applications from the astronomy domain as WebSocket services.
+  It allows you to run multiple services, interact with them and link them.</p>
+  <h2>Registered Services:</h2>
+  {% for service in services %}
+    <a href="/service/{{ service.name }}/{{ service.port }}">Test</a>
+  {% endfor %}
+  <button>Add Service</button>
+</body>
+</html>

@@ -5,7 +5,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const board = document.querySelector(".board");
   createBoard(board);
   // Open the WebSocket connection and register event handlers.
-  const websocket = new WebSocket("ws://localhost:8001/");
+  const websocket = new WebSocket("ws://localhost:" + port + '/');
   receiveMoves(board, websocket);
   sendMoves(board, websocket);
 });
