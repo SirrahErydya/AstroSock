@@ -1,7 +1,7 @@
 from flask import Flask, render_template
 import yaml
 import socketserver
-import threading
+from multiprocessing import Process
 import atexit
 
 app = Flask("AstroSock")
@@ -20,9 +20,9 @@ def setup_services():
         module_name = "services." + args["name"]
         service_module = __import__(module_name, globals(), locals(), ['webservice', 'blueprint'], 0)
         print("Start service ", service_name)
-        th = threading.Thread(target=service_module.webservice.run, args=[free_port])
-        th.start()
-        service_threads.append(th)
+        p = Process(target=service_module.webservice.run, args=[ free_port ])
+        p.start()
+        service_threads.append(p)
         print(service_name, "running")
         app.register_blueprint(service_module.blueprint, url_prefix="/service")
         args["port"] = free_port
@@ -34,7 +34,7 @@ active_services = setup_services()
 
 def exit_all_threads():
     for th in service_threads:
-        th.join()
+        th.join(2)
     print("All service threads are complete.")
 
 
