@@ -60,5 +60,9 @@ async def main(port):
         await asyncio.Future()  # run forever
 
 
+def run(port):
+    asyncio.run(main(port))
+
+
 if __name__ == "__main__":
     asyncio.run(main(8001))
