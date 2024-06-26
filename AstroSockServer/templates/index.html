@@ -10,7 +10,7 @@
   It allows you to run multiple services, interact with them and link them.</p>
   <h2>Registered Services:</h2>
   {% for service in services %}
-    <a href="/service/{{ service.name }}/{{ service.port }}">Test</a>
+    <a href="/service/{{ service.name }}/{{ service.port }}">{{ service.name }}</a> <br/>
   {% endfor %}
   <button>Add Service</button>
 </body>

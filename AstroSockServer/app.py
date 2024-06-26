@@ -24,7 +24,7 @@ def setup_services():
         p.start()
         service_threads.append(p)
         print(service_name, "running")
-        app.register_blueprint(service_module.blueprint, url_prefix="/service")
+        app.register_blueprint(service_module.blueprint, url_prefix="/service/")
         args["port"] = free_port
         services.append(args)
     return services
