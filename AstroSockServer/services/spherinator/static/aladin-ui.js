@@ -1,4 +1,3 @@
-//import {HealpixIndex} from "https://aladin.cds.unistra.fr/AladinLite/api/v3/latest/src/js/libs/healpix";
 
 let survey_url = window.location
 let hierarchy = 1
