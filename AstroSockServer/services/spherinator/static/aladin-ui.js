@@ -1,18 +1,16 @@
 
-let survey_url = window.location
 let hierarchy = 1
 
 // URLs
-const model_url = survey_url + 'model'
-const projection_url = survey_url + 'projection'
-const cat_url = survey_url + 'interaction_catalog'
-const cube_url = survey_url + 'data_cube'
+const cat_url = {}
+const cube_url = {}
 
 let aladin;
 
 // DOM Elements
 const aladin_div = document.getElementById('aladin-lite-div')
 const aladin_layer_radios = document.getElementsByName("aladin-layer-radio")
+
 
 A.init.then(() => {
     aladin = A.aladin('#aladin-lite-div', {
@@ -25,12 +23,19 @@ A.init.then(() => {
         "showFov": false,
         "fov": 360
     });
-    let model_survey = aladin.createImageSurvey('TNG100-99-model',
-        'TNG100-99 Model', model_url,
-        'equatorial', 3, {imgFormat: 'jpg'})
-    let projection_survey = aladin.createImageSurvey('TNG100-99-projection',
-        'TNG100-99 Morphology Images', projection_url,
-        'equatorial', 3, {imgFormat: 'jpg'})
+    for(let survey_name in surveys) {
+        alert(surveys[survey_name])
+        let model_url = surveys[survey_name] + '/' + 'model'
+        //let model_url = "/services/spherinator/static/surveys/TNG100-99/model"
+        let projection_url = surveys[survey_name]  + '/' + 'projection'
+        let model_survey = aladin.createImageSurvey(survey_name + '-model',
+            survey_name + ' Model', model_url,
+            'equatorial', 3, {imgFormat: 'jpg'})
+        let projection_survey = aladin.createImageSurvey(survey_name + '-projection',
+            survey_name + ' Morphology Images', projection_url,
+            'equatorial', 3, {imgFormat: 'jpg'})
+    }
+
     let survey_to_show = document.querySelector('input[name="aladin-layer-radio"]:checked').value;
     aladin.setBaseImageLayer(survey_to_show);
     /*

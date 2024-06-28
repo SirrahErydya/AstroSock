@@ -6,7 +6,9 @@ from services.spherinator.models import Survey
 
 @blueprint.route('spherinator/<port>')
 def spherinator(port):
-    surveys_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', 'surveys')
     surveys = Survey.select_all()
-    survey_paths = [ os.path.join(surveys_folder, survey.name) for survey in surveys]
-    return render_template('spherinator.html', port=port, survey_paths=survey_paths, surveys=surveys)
+    survey_map = {}
+    for survey in surveys:
+        survey_path = url_for('.static', filename='surveys/'+survey.name)
+        survey_map[survey.name] = survey_path
+    return render_template('spherinator.html', port=port, survey_map=survey_map, surveys=surveys)
