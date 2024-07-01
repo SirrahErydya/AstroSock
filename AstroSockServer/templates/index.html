@@ -3,15 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <title>AstroSock</title>
+    <link type="text/css" rel="stylesheet" href="{{ url_for('.static', filename='style.css') }}">
 </head>
 <body>
-  <h1>Welcome to AstroSock!</h1>
-  <p>AstroSock offers applications from the astronomy domain as WebSocket services.
-  It allows you to run multiple services, interact with them and link them.</p>
-  <h2>Registered Services:</h2>
-  {% for service in services %}
-    <a href="/service/{{ service.name }}/{{ service.port }}">{{ service.name }}</a> <br/>
-  {% endfor %}
-  <button>Add Service</button>
+    <div class="navbar">
+        <a href="/"><img src="{{ url_for('.static', filename='img/AstroSockLogo_nf.png') }}"/></a>
+        <ul>
+            <li>Available Services:</li>
+            {% for service in services %}
+                <li><a href="/service/{{ service.name }}/{{ service.port }}">{{ service.name }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="banner">
+        <img src="{{ url_for('.static', filename='img/AstroSockLogo.png') }}"/>
+        <h1>Welcome to AstroSock!</h1>
+        <p>AstroSock offers applications from the astronomy domain as WebSocket services. <br/>
+            It allows you to run multiple services, interact with them and link them.</p>
+    </div>
+    <div class="service-container">
+        <h1>Registered Services:</h1>
+        <div class="grid">
+            {% for service in services %}
+            <a href="/service/{{ service.name }}/{{ service.port }}">
+            <div class="grid-item">
+                <h2>{{ service.name }}</h2>
+                <p>{{ service.description }}</p>
+            </div>
+            </a>
+            {% endfor %}
+        </div>
+
+    </div>
 </body>
 </html>
