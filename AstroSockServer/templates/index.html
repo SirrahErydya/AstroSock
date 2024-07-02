@@ -6,15 +6,7 @@
     <link type="text/css" rel="stylesheet" href="{{ url_for('.static', filename='style.css') }}">
 </head>
 <body>
-    <div class="navbar">
-        <a href="/"><img src="{{ url_for('.static', filename='img/AstroSockLogo_nf.png') }}"/></a>
-        <ul>
-            <li>Available Services:</li>
-            {% for service in services %}
-                <li><a href="/service/{{ service.name }}/{{ service.port }}">{{ service.name }}</a></li>
-            {% endfor %}
-        </ul>
-    </div>
+    {% include 'navbar.html' %}
     <div class="banner">
         <img src="{{ url_for('.static', filename='img/AstroSockLogo.png') }}"/>
         <h1>Welcome to AstroSock!</h1>
@@ -25,7 +17,7 @@
         <h1>Registered Services:</h1>
         <div class="grid">
             {% for service in services %}
-            <a href="/service/{{ service.name }}/{{ service.port }}">
+            <a href="/service/{{ service.key }}/{{ service.port }}">
             <div class="grid-item">
                 <h2>{{ service.name }}</h2>
                 <p>{{ service.description }}</p>

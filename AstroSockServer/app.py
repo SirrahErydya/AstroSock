@@ -17,7 +17,7 @@ def setup_services():
         # Find a free port and run socket
         with socketserver.TCPServer(("localhost", 0), None) as s:
             free_port = s.server_address[1]
-        module_name = "services." + args["name"]
+        module_name = "services." + service_name
         service_module = __import__(module_name, globals(), locals(), ['webservice', 'blueprint'], 0)
         print("Start service ", service_name)
         p = Process(target=service_module.webservice.run, args=[ free_port ])
@@ -26,6 +26,7 @@ def setup_services():
         print(service_name, "running")
         app.register_blueprint(service_module.blueprint, url_prefix="/service/")
         args["port"] = free_port
+        args["key"] = service_name
         services.append(args)
     return services
 

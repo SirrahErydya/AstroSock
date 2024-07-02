@@ -1,1 +1,15 @@
+<link type="text/css" rel="stylesheet" href="{{ url_for('.static', filename='style.css') }}">
 
+<div class="sidemenu">
+    <a href="/"><img src="{{ url_for('.static', filename='img/AstroSockLogo.png') }}"/></a>
+    <h2>Available Services:</h2>
+    <ul>
+        {% for service in services %}
+            <li>
+                <button onclick="window.open('/service/{{ service.key }}/{{ service.port }}', '_blank', 'location=yes')">
+                    {{ service.name }}
+                </button>
+            </li>
+        {% endfor %}
+    </ul>
+</div>

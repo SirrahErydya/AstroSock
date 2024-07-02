@@ -8,9 +8,11 @@ body {
 
 .banner {
     position: fixed;
-    top: 100px;
-    width: 100vw;
-    height: calc(100vh - 100px);
+    top: 50px;
+    left: 10vw;
+    padding-top: 50px;
+    width: 90vw;
+    height: calc(100vh - 50px);
     background-attachment: fixed;
     background-image: url('img/hdf_t.png');
     background-size: cover;
@@ -25,54 +27,64 @@ body {
     font-size: 50px;
 }
 
-.navbar {
+.sidemenu {
     top: 0;
-    width: 100vw;
-    padding: 2px;
-    overflow: hidden;
+    left: 0;
+    width: 10vw;
+    padding: 1%;
     position: fixed;
-    background-color: black;
+    background-color: #424242;
     z-index: 42;
+    height: 100vh;
+    text-align: center;
 }
 
-.navbar img {
-    height: 50px;
+.sidemenu img {
+    margin-bottom: 50px;
+    width: 100%;
 }
 
-.navbar ul {
-    width: 80vw;
+.sidemenu ul {
     list-style: none;
-    display: inline-block;
-    float: right;
-    text-align: right;
-    padding-right: 20px;
+    display: block;
+    width: 100%;
+    padding: 0;
+    margin: 0;
 }
 
-.navbar ul li {
+.sidemenu ul li {
     text-decoration: none;
-    display: inline;
+    display: block;
+
+    margin: 1%;
 }
 
-.navbar ul li a {
-    padding: 20px;
-}
-
-.navbar ul li a:link {
+.sidemenu ul li button {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: 100%;
+    border: 0;
+    background-color: #535353;
     color: cyan;
-    text-decoration: none;
+    font-size: 18px;
+    font-family: Roboto;
 }
 
-.navbar ul li a:hover {
+
+.sidemenu ul li button:hover{
     color: black;
     background-color: cyan;
+    cursor: pointer;
 }
 
 .service-container {
     top: 100vh;
+    left: calc(10vw + 2%);
+    width: calc(90vw - 6%);
     margin-top: 2%;
     text-align: center;
     padding: 2%;
-    background-color: #424242;
+    background-color: black;
     position: relative;
 }
 
@@ -82,12 +94,12 @@ body {
     gap: 10px;
 }
 
-.grid a:link {
+.grid a:link, .grid a:visited, .grid a:active {
     color: white;
     text-decoration: none;
 }
 
-.grid a:link:hover>.grid-item {
+.grid-item:hover {
     background-color: #646464;
 }
 
