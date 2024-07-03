@@ -1,6 +1,15 @@
 import asyncio
 import websockets
 import json
+import healpy
+from .models import Survey
+
+
+def find_datacube(survey, order, theta, phi):
+    n_side = 2**order
+    pixel = healpy.ang2pix(n_side, theta, phi, nest=True)
+    hierarchy = survey.hierarchy
+
 
 
 async def handler(websocket):

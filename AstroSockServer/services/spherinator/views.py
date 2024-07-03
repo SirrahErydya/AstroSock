@@ -1,5 +1,5 @@
 from . import blueprint
-from flask import render_template, url_for
+from flask import render_template, url_for, session
 import os
 from services.spherinator.models import Survey
 
@@ -7,8 +7,9 @@ from services.spherinator.models import Survey
 @blueprint.route('spherinator/<port>')
 def spherinator(port):
     surveys = Survey.select_all()
-    survey_map = {}
-    for survey in surveys:
-        survey_path = url_for('.static', filename='surveys/'+survey.name)
-        survey_map[survey.name] = survey_path
-    return render_template('spherinator.html', port=port, survey_map=survey_map, surveys=surveys)
+    return render_template('spherinator.html', port=port, surveys=surveys, services=session['services'])
+
+@blueprint.route('spherinator/<port>/<survey_id>')
+def survey(port, survey_id):
+    survey_obj = Survey.select_by_id(survey_id)
+    return render_template('survey.html', port=port, survey=survey_obj)

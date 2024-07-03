@@ -1,18 +1,18 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, session
 import yaml
 import socketserver
 from multiprocessing import Process
 import atexit
 
 app = Flask("AstroSock")
+app.secret_key = "Change me for production!"
 
 service_threads = []
-
+active_services = []
 
 def setup_services():
     stream = open("services.yaml", 'r')
     config = yaml.load(stream, yaml.Loader)
-    services = []
     for service_name, args in config["services"].items():
         # Find a free port and run socket
         with socketserver.TCPServer(("localhost", 0), None) as s:
@@ -27,11 +27,8 @@ def setup_services():
         app.register_blueprint(service_module.blueprint, url_prefix="/service/")
         args["port"] = free_port
         args["key"] = service_name
-        services.append(args)
-    return services
+        active_services.append(args)
 
-
-active_services = setup_services()
 
 def exit_all_threads():
     for th in service_threads:
@@ -41,7 +38,9 @@ def exit_all_threads():
 
 @app.route("/")
 def index():
-    return render_template('index.html', services=active_services)
+    session['services'] = active_services
+    return render_template('index.html', services=session['services'])
 
 
 atexit.register(exit_all_threads)
+setup_services()
