@@ -39,6 +39,7 @@ def exit_all_threads():
 @app.route("/")
 def index():
     session['services'] = active_services
+    session['websockets'] = {}
     return render_template('index.html', services=session['services'])
 
 

@@ -52,6 +52,7 @@ function choose_datapoint(event) {
     let theta =  Math.PI / 2. - radec[1] / 180. * Math.PI;
     let phi = radec[0] / 180. * Math.PI
     const msg = {
+        type: 'pick_spherinator_cell',
         survey: survey,
         order: order,
         theta: theta,

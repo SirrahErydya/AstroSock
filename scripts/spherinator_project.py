@@ -19,7 +19,6 @@ def create_survey(survey_name, survey_descr, max_order, hierarchy):
         "INSERT INTO survey(name, description, max_order, hierarchy) VALUES(%s, %s, %s, %s);",
         (survey_name, survey_descr, max_order, hierarchy)
     )
-    traverse_catalog(survey_name)
 
 
 def traverse_catalog(survey_name):
@@ -44,11 +43,14 @@ def traverse_catalog(survey_name):
                     query = "INSERT INTO spherinator_cell(ra, dec, norder, pixel, survey, dp_id) VALUES(%s, %s, %s, %s, %s, %s);"
                     dp_id = row[1]
                     if dp_id != "undefined":
+                        pixel = n_pixel
+                        if hierarchy > 0:
+                            pixel = pixel * 4 * hierarchy + int(row[0])
                         cursor.execute(query, [
                             row[2],
                             row[3],
                             n_order + int(hierarchy),
-                            n_pixel + int(row[0]),
+                            pixel,
                             survey_id,
                             dp_id
                         ])
@@ -63,8 +65,8 @@ if __name__ == "__main__":
     sdesc = str(sys.argv[2])
     max_order = sys.argv[3]
     hierarchy = sys.argv[4]
-    create_survey(sname, sdesc, max_order, hierarchy)
-
+    #create_survey(sname, sdesc, max_order, hierarchy)
+    traverse_catalog(sname)
     connection.commit()
     cursor.close()
     connection.close()
