@@ -3,20 +3,24 @@ import websockets
 import json
 import healpy
 from .models import Survey, SpherinatorCell
-from flask import session
+from utils import PUBLISHER
 
+SUBSCRIBERS = set()
 
 def pick_cell(survey, order, theta, phi):
-    hierarchy = survey.hierarchy
-    n_side = 2**(order+hierarchy)
+    hierarchy = survey["hierarchy"]
+    n_order = order + hierarchy
+    n_side = 2**n_order
     pixel = healpy.ang2pix(n_side, theta, phi, nest=True)
-    cell = SpherinatorCell.select_by_healpix(order, pixel)
+    cell = SpherinatorCell.select_by_healpix(n_order, pixel)
+    if not cell:
+        return {}
     cube_paths = {}
-    data_aspects = cell.survey.data_aspects()
+    data_aspects = cell.survey.data_aspects
     for dim in data_aspects.keys():
         for aspect in data_aspects[dim]:
             path = cell.survey.survey_url() + '/data_cube/' + dim + '/' + aspect + '/' + cell.dp_id
-            cube_paths['aspect'] = path
+            cube_paths[aspect] = path
     cell_info = {
         'cell': cell.to_json(),
         'data_aspects': data_aspects,
@@ -25,20 +29,24 @@ def pick_cell(survey, order, theta, phi):
     return cell_info
 
 
-async def handler(websocket):
-    session['sockets']['spherinator'] = websocket
+async def subscribe(websocket):
+    print("Subscribing...")
+    SUBSCRIBERS.add(websocket)
 
+async def handler(websocket):
     async for message in websocket:
-        # Todo: Fill with actual logic
         msg = json.loads(message)
-        if msg['type'] == "datacube_broadcast":
-            print("Spherinator got the datacube broadcast!")
+        if msg['type'] == "subscribe":
+            await subscribe(websocket)
+
         if msg['type'] == 'pick_spherinator_cell':
             broadcast_message = {
                 'type': 'datacube_broadcast',
                 'cell_info': pick_cell(msg['survey'], msg['order'], msg['theta'], msg['phi'])
             }
-            websockets.broadcast(session['sockets'].values(), broadcast_message)
+            #print(broadcast_message)
+            for sub in SUBSCRIBERS:
+                await sub.send(json.dumps(broadcast_message))
 
 
 

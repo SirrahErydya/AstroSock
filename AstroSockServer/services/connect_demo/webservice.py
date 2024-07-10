@@ -3,12 +3,9 @@ from services.connect_demo.connect4 import PLAYER1, PLAYER2, Connect4
 import websockets
 import itertools
 import json
-from flask import session
 
 
 async def handler(websocket):
-    session['sockets'][connect_demo] = websocket
-
     # Initialize a Connect Four game.
     game = Connect4()
 
@@ -16,11 +13,14 @@ async def handler(websocket):
     turns = itertools.cycle([PLAYER1, PLAYER2])
     player = next(turns)
 
+
+
     async for message in websocket:
         # Parse a "play" event from the UI.
         event = json.loads(message)
+        print(message)
         if event['type'] == 'datacube_broadcast':
-            print("Connect demo received the datacube boradcast!")
+            print("Connect demo received the datacube broadcast!")
 
         elif event["type"] == "play":
             column = event["column"]

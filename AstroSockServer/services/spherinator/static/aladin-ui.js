@@ -12,8 +12,37 @@ const aladin_div = document.getElementById('aladin-lite-div')
 const aladin_layer_radios = document.getElementsByName("aladin-layer-radio")
 const coord_display = document.getElementById('coordinates-display')
 
-// WebSocket
-const websocket = new WebSocket("ws://localhost:" + port + '/');
+// Init socket
+window.addEventListener("DOMContentLoaded", () => {
+    const websocket = new WebSocket("ws://localhost:" + port + '/');
+    subscribe(websocket)
+    send_datapoint(websocket)
+    receive(websocket)
+})
+
+function subscribe(websocket) {
+    websocket.addEventListener("open", e => {
+        websocket.send(JSON.stringify({type: 'subscribe'}))
+    })
+}
+
+function send_datapoint(websocket) {
+    document.addEventListener("choose_datapoint", e => {
+        const msg = e.detail
+        websocket.send(JSON.stringify(msg))
+      });
+}
+
+function receive(websocket) {
+    websocket.addEventListener("message", ({ data }) => {
+        const event = JSON.parse(data);
+        alert("I received a message!")
+        if(event.type == "datacube_broadcast") {
+            alert("I received a datacube!")
+        }
+      });
+}
+
 
 
 A.init.then(() => {
@@ -60,8 +89,9 @@ function choose_datapoint(event) {
     }
     coord_display.style = "display: block;"
     coord_display.innerHTML = "<span>Theta: " + theta + "; Phi: " + phi + "</span>"
-    websocket.send(JSON.stringify(msg))
+    const dp_event = new CustomEvent('choose_datapoint', { detail: msg})
 
+    document.dispatchEvent(dp_event)
 }
 
 
@@ -72,6 +102,8 @@ aladin_div.addEventListener("mouseup", function(ev) {
     }
 })
 
+
+
 // Aladin Layer change
 for(let i=0; i < aladin_layer_radios.length; i++) {
     aladin_layer_radios[i].addEventListener('change', function(e) {
@@ -79,6 +111,8 @@ for(let i=0; i < aladin_layer_radios.length; i++) {
         aladin.setBaseImageLayer(survey_id)
     })
 }
+
+
 
 
 

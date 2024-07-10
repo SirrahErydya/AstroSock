@@ -1,6 +1,7 @@
 import psycopg2
 from flask import url_for
 import yaml
+import os
 
 # Decision was made to not use a Model Framework like SQL alchemy to keep flexibility and meet IVOA standards
 # I hope, I won't regret this
@@ -39,13 +40,19 @@ class Survey(Model):
         self.max_order = max_order
         self.hierarchy = hierarchy
 
-    def survey_url(self):
-        return url_for('.static', filename='surveys/'+self.name)
+        aspects = yaml.load(open(os.path.join(self.survey_path(), 'data_cube', 'data_aspects.yaml'), 'r'), yaml.Loader)
+        self.data_aspects = aspects['data_aspects']
 
-    def data_aspects(self):
-        cube_url = self.survey_url() + '/data_cube'
-        das = yaml.load(open(cube_url+'/data_aspects.yaml'), 'r')
-        return das['data_aspects']
+    def survey_path(self):
+        return os.path.join('services', 'spherinator', 'static', 'surveys', self.name)
+
+    def survey_url(self):
+        return os.path.join('/service', 'spherinator', 'static', 'surveys', self.name)
+
+    def cube_url(self):
+        return os.path.join(self.survey_url(), 'data_cube')
+
+
 
     def to_json(self):
         return {
@@ -135,6 +142,13 @@ class SpherinatorCell(Model):
     @classmethod
     def select_by_healpix(cls, order, pixel):
         conn, cur = SpherinatorCell.connect()
-        q = cur.mogrify("SELECT * FROM spherinator_cell WHERE norder = %s AND pixel = %s;", (order, pixel))
-        return cls.create(SpherinatorCell.select(q, conn, cur)[0])
+        q = cur.mogrify("SELECT * FROM spherinator_cell WHERE norder = %s AND pixel = %s;", (int(order), int(pixel)))
+        res = SpherinatorCell.select(q, conn, cur)
+        if len(res) < 1:
+            return None
+        return cls.create(res[0])
 
+
+if __name__ == "__main__":
+    test_s = Survey(0, 'TNG100-99', '', 3, 1)
+    print(test_s.name)
